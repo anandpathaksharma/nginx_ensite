@@ -29,14 +29,32 @@
 ### DEALINGS IN THE SOFTWARE.
 
 ## The nginx binary.
-NGINX=$(which nginx)
+NGINX=`readlink -f \`which nginx\``
 [ -x $NGINX ] || exit 0
 
+## Determine (very loosely) whether Nginx was installed via apt-get
+## or via `rvmsudo passenger-install-nginx-module`.
+if [[ $NGINX == */opt/nginx* ]]; then
+    NGINX_CONF_DIR=/opt/nginx/conf;
+else 
+    NGINX_CONF_DIR=/etc/nginx;
+fi
+
+## Test for path existence and create if not detected (be friendly to 
+## first time users).
 ## The paths for both nginx configuration files and the sites
 ## configuration files and symbolic link destinations.
-NGINX_CONF_DIR=/etc/nginx
-AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available"
+if [[ ! -d "$NGINX_CONF_DIR/sites-available" ]]; then
+    sudo mkdir -p "$NGINX_CONF_DIR/sites-available";
+fi
+AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available";
+
+if [[ ! -d $NGINX_CONF_DIR/sites-available ]]; then
+    sudo mkdir -p "$NGINX_CONF_DIR/sites-enabled";
+fi
 ENABLED_SITES_PATH="$NGINX_CONF_DIR/sites-enabled"
+
+## Other variables.
 AVAILABLE_SITES_DIR="sites-available"
 SCRIPTNAME=${0##*/}
 
