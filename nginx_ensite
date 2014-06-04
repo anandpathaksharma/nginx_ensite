@@ -49,7 +49,7 @@ if [[ ! -d "$NGINX_CONF_DIR/sites-available" ]]; then
 fi
 AVAILABLE_SITES_PATH="$NGINX_CONF_DIR/sites-available";
 
-if [[ ! -d $NGINX_CONF_DIR/sites-available ]]; then
+if [[ ! -d "$NGINX_CONF_DIR/sites-enabled" ]]; then
     sudo mkdir -p "$NGINX_CONF_DIR/sites-enabled";
 fi
 ENABLED_SITES_PATH="$NGINX_CONF_DIR/sites-enabled"
